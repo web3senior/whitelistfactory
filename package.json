@@ -1,0 +1,29 @@
+{
+  "name": "whitelist",
+  "version": "1.0.0",
+  "description": "whitelist smart contract",
+  "main": "",
+  "scripts": {
+    "hardhat:tasks": "npx hardhat",
+    "compile": "npx hardhat compile",
+    "hardhat:test": "npx hardhat test",
+    "deploy": "npx hardhat run scripts/deploy.js --network localhost",
+    "node": "npx hardhat node",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "whitelist",
+    "NFT",
+    "solidity",
+    "Lukso"
+  ],
+  "author": "Amir Rahimi <atenyun@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.20.1"
+  },
+  "dependencies": {
+    "web3": "^4.5.0"
+  }
+}
