@@ -5,6 +5,8 @@
 ![Solidity Badge](assets/badge-solidity.svg "Solidity")
 ![Test Badge](assets/badge-test.svg "Test")
 ![HardHat Badge](assets/badge-hardhat.svg "HardHat")
+![Prettier Badge](assets/badge-prettier.svg "HardHat")
+<a href="//twitter.com/atenyun">![X Badge](assets/badge-x.svg "HardHat")</a>
 
 ## Overview
 
@@ -21,8 +23,6 @@
 - **Transparency and immutability:** All whitelist data is stored on the blockchain, ensuring tamper-proof records and open visibility.
 
 ### Motiviation
-> [!IMPORTANT]
-
 > On LUKSO, users currently get a free monthly quota of 20.000.000 GAS when creating a Universal Profile through the Universal Profile Browser Extension[1].
 
 ### Features
@@ -32,11 +32,21 @@
     
     - Different whitelisting criteria can be implemented (e.g., holding specific tokens, participating in events).
 
+- Minting control:
+    - Only whitelisted addresses can mint NFTs during the designated mint period.
+    - Set limits on the number of NFTs each whitelisted address can mint.
+- Security:
+    - Access control ensures only authorized manager can manage the whitelist.
+    - Re-entrancy attacks are prevented using standard security practices.
 
 ### Getting Started
 ```
-git clone 
+git clone https://github.com/web3senior/whitelistfactory
+cd whitelistfactory
+npm i
+npm run dev
 ```
+➜ ready on localhost💥
 
 ### Workflow
 
@@ -44,7 +54,7 @@ git clone
 view demo  »
 
 ### Deployed Contract
-Lukso: contract address ```0x000000000000000``` view on explorer ``https://``
+Lukso: contract address ``0x000000000000000`` view on explorer ``https://``
 
 Scroll Sepolia: contract address ```0x000000000000000``` view on explorer ``https://``
 
