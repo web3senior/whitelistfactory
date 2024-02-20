@@ -3,10 +3,10 @@
 ![Author Badge](assets/badge-author.svg "Aratta")
 ![Lukso Badge](assets/badge-lukso.svg "Lukso")
 ![Solidity Badge](assets/badge-solidity.svg "Solidity")
-![Test Badge](assets/badge-test.svg "Test")
+<a href="/test">![Test Badge](assets/badge-test.svg "Test")</a>
 ![HardHat Badge](assets/badge-hardhat.svg "HardHat")
 ![Prettier Badge](assets/badge-prettier.svg "HardHat")
-<a href="//twitter.com/atenyun">![X Badge](assets/badge-x.svg "HardHat")</a>
+<a href="//twitter.com/atenyun" target="_blank">![X Badge](assets/badge-x.svg "HardHat")</a>
 
 ## Overview
 
