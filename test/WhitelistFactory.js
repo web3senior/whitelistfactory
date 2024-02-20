@@ -1,58 +1,103 @@
-const { time, loadFixture } = require('@nomicfoundation/hardhat-toolbox/network-helpers')
-const { anyValue } = require('@nomicfoundation/hardhat-chai-matchers/withArgs')
-const { expect } = require('chai')
-const hre = require('hardhat')
+const {
+  time,
+  loadFixture,
+} = require("@nomicfoundation/hardhat-toolbox/network-helpers");
+const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
+const { expect } = require("chai");
+const hre = require("hardhat");
 
-describe('WhitelistFactory', function () {
+describe("WhitelistFactory", function () {
   // We define a fixture to reuse the same setup in every test.
   // We use loadFixture to run this setup once, snapshot that state,
   // and reset Hardhat Network to that snapshot in every test.
 
   async function whitelistFixture() {
     // Contracts are deployed using the first signer/account by default
-    const [owner, otherAccount] = await ethers.getSigners()
+    const [owner, otherAccount] = await ethers.getSigners();
 
-    const WhitelistFactory = await ethers.getContractFactory('WhitelistFactory')
-    const whitelistFactory = await WhitelistFactory.deploy()
+    const WhitelistFactory = await ethers.getContractFactory(
+      "WhitelistFactory"
+    );
+    const whitelistFactory = await WhitelistFactory.deploy();
 
-    return { whitelistFactory, owner, otherAccount }
+    return { whitelistFactory, owner, otherAccount };
   }
 
-  describe('Deployment', function () {
-    it('Should set the right owner', async function () {
-      const { whitelistFactory, owner } = await loadFixture(whitelistFixture)
-      expect(await whitelistFactory.owner()).to.equal(owner.address)
-    })
+  describe("Deployment", function () {
+    it("Should set the right owner", async function () {
+      const { whitelistFactory, owner } = await loadFixture(whitelistFixture);
+      expect(await whitelistFactory.owner()).to.equal(owner.address);
+    });
 
-    it('Should fail if the newOwnerShip is not called by the owner', async function () {
-      const { whitelistFactory, owner, otherAccount } = await loadFixture(whitelistFixture)
+    it("Should fail if the newOwnerShip is not called by the owner", async function () {
+      const { whitelistFactory, owner, otherAccount } = await loadFixture(
+        whitelistFixture
+      );
 
       await expect(
-        whitelistFactory.connect(otherAccount).transferOwnership('0xcd3B766CCDd6AE721141F452C550Ca635964ce71')
-      ).to.be.revertedWith("You aren't the owner")
-    })
+        whitelistFactory
+          .connect(otherAccount)
+          .transferOwnership("0xcd3B766CCDd6AE721141F452C550Ca635964ce71")
+      ).to.be.revertedWith("You aren't the owner");
+    });
 
-    describe('Count', function () {
-      it('Should set count in zero', async function () {
-        const { whitelistFactory } = await loadFixture(whitelistFixture)
-        const count = await whitelistFactory.count.call()
-        expect(ethers.toNumber(count)).to.be.a('number')
-        expect(count).to.be.equal(0)
-      })
-    })
+    describe("Count", function () {
+      it("Should set count in zero", async function () {
+        const { whitelistFactory } = await loadFixture(whitelistFixture);
+        const count = await whitelistFactory.count.call();
+        expect(ethers.toNumber(count)).to.be.a("number");
+        expect(count).to.be.equal(0);
+      });
+    });
 
-    // describe('Whitelist', function () {
-    //   // it sould Eemit, add new whitelist, check the timestams or the aruguments
-    //   it('Should fail if the startTime is smaller than current time', async function () {
-    //     const { whitelistFactory, owner } = await loadFixture(whitelistFixture)
-    //    await expect(
-    //       whitelistFactory.newWhitelist((await time.latest()) - 100, (await time.latest()) + 60 * 60, owner.address)
-    //     ).to.be.revertedWith('Start time must be greater than current time')
-    //   })
-    // })
-  })
+    describe("Whitelist", async function () {
+      it("Should fail if the start time is smaller than current block time", async function () {
+        const startTime = (await time.latest()) - 100;
+        const endTime = (await time.latest()) - 101;
+        const { whitelistFactory, owner } = await loadFixture(whitelistFixture);
+        expect(
+          whitelistFactory.newWhitelist(startTime, endTime, owner.address)
+        ).to.be.revertedWith("Start time must be greater than current time");
+      });
 
-  /*
+      it("Should fail if the end time is smaller than start time", async function () {
+        const startTime = (await time.latest()) - 100;
+        const endTime = (await time.latest()) - 101;
+        const { whitelistFactory, owner } = await loadFixture(whitelistFixture);
+        expect(
+          whitelistFactory.newWhitelist(startTime, endTime, owner.address)
+        ).to.be.revertedWith("Start time must be greater than current time");
+      });
+
+      it("Should emit new whitelist created", async function () {
+        const metadata =
+          "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi";
+        const startTime = (await time.latest()) + 100;
+        const endTime = (await time.latest()) + 101;
+        const { whitelistFactory, owner } = await loadFixture(whitelistFixture);
+
+        expect(
+          await whitelistFactory.newWhitelist(
+            metadata,
+            startTime,
+            endTime,
+            owner.address
+          )
+        ).to.emit(
+          owner.address,
+          "0x0000000000000000000000000000000000000000000000000000000000000001",
+          metadata,
+          startTime,
+          endTime,
+          owner.address,
+          false
+        );
+      });
+    });
+  });
+});
+
+/*
  async function deployOneYearLockFixture() {
     const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60
     const ONE_GWEI = 1_000_000_000
@@ -144,4 +189,3 @@ describe('WhitelistFactory', function () {
       })
     })
   })*/
-})

@@ -1,0 +1,279 @@
+{
+  "stats": {
+    "suites": 4,
+    "tests": 6,
+    "passes": 0,
+    "pending": 0,
+    "failures": 6,
+    "start": "2024-02-18T21:13:07.883Z",
+    "end": "2024-02-18T21:13:08.865Z",
+    "duration": 982,
+    "testsRegistered": 6,
+    "passPercent": 0,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "584ffa78-3b5f-432f-8f95-e9b7035ef7f4",
+      "title": "",
+      "fullFile": "C:\\xampp\\htdocs\\whitelistfactory\\test\\WhitelistFactory.js",
+      "file": "\\test\\WhitelistFactory.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "24128ca8-e6ad-41b5-850f-b544dde86cb4",
+          "title": "WhitelistFactory",
+          "fullFile": "C:\\xampp\\htdocs\\whitelistfactory\\test\\WhitelistFactory.js",
+          "file": "\\test\\WhitelistFactory.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "c080f36a-31d0-4c67-a724-433f8ceccf06",
+              "title": "Deployment",
+              "fullFile": "C:\\xampp\\htdocs\\whitelistfactory\\test\\WhitelistFactory.js",
+              "file": "\\test\\WhitelistFactory.js",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "Should set the right owner",
+                  "fullTitle": "WhitelistFactory Deployment Should set the right owner",
+                  "timedOut": false,
+                  "duration": 1,
+                  "state": "failed",
+                  "speed": null,
+                  "pass": false,
+                  "fail": true,
+                  "pending": false,
+                  "context": null,
+                  "code": "const { whitelistFactory, owner } = await loadFixture(whitelistFixture)\nexpect(await whitelistFactory.owner()).to.equal(owner.address)",
+                  "err": {
+                    "message": "TypeError: ethers.getSigners is not a function",
+                    "estack": "TypeError: ethers.getSigners is not a function\n    at whitelistFixture (test\\WhitelistFactory.js:14:48)\n    at loadFixture (node_modules\\@nomicfoundation\\hardhat-network-helpers\\dist\\src\\loadFixture.js:63:28)\n    at async Context.<anonymous> (test\\WhitelistFactory.js:24:43)",
+                    "diff": null
+                  },
+                  "uuid": "01ce1893-1b66-4ec2-a4b6-450898047d46",
+                  "parentUUID": "c080f36a-31d0-4c67-a724-433f8ceccf06",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "Should fail if the newOwnerShip is not called by the owner",
+                  "fullTitle": "WhitelistFactory Deployment Should fail if the newOwnerShip is not called by the owner",
+                  "timedOut": false,
+                  "duration": 0,
+                  "state": "failed",
+                  "speed": null,
+                  "pass": false,
+                  "fail": true,
+                  "pending": false,
+                  "context": null,
+                  "code": "const { whitelistFactory, owner, otherAccount } = await loadFixture(whitelistFixture)\nawait expect(\n  whitelistFactory.connect(otherAccount).transferOwnership('0xcd3B766CCDd6AE721141F452C550Ca635964ce71')\n).to.be.revertedWith(\"You aren't the owner\")",
+                  "err": {
+                    "message": "TypeError: ethers.getSigners is not a function",
+                    "estack": "TypeError: ethers.getSigners is not a function\n    at whitelistFixture (test\\WhitelistFactory.js:14:48)\n    at loadFixture (node_modules\\@nomicfoundation\\hardhat-network-helpers\\dist\\src\\loadFixture.js:63:28)\n    at async Context.<anonymous> (test\\WhitelistFactory.js:29:57)",
+                    "diff": null
+                  },
+                  "uuid": "363e61e1-b08e-4b76-b854-12b82f2d5a44",
+                  "parentUUID": "c080f36a-31d0-4c67-a724-433f8ceccf06",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [
+                {
+                  "uuid": "626782d2-f2b8-4f1e-ae5d-e7beab56e1ba",
+                  "title": "Count",
+                  "fullFile": "C:\\xampp\\htdocs\\whitelistfactory\\test\\WhitelistFactory.js",
+                  "file": "\\test\\WhitelistFactory.js",
+                  "beforeHooks": [],
+                  "afterHooks": [],
+                  "tests": [
+                    {
+                      "title": "Should set count in zero",
+                      "fullTitle": "WhitelistFactory Deployment Count Should set count in zero",
+                      "timedOut": false,
+                      "duration": 0,
+                      "state": "failed",
+                      "speed": null,
+                      "pass": false,
+                      "fail": true,
+                      "pending": false,
+                      "context": null,
+                      "code": "const { whitelistFactory } = await loadFixture(whitelistFixture)\nconst count = await whitelistFactory.count.call()\nexpect(ethers.toNumber(count)).to.be.a('number')\nexpect(count).to.be.equal(0)",
+                      "err": {
+                        "message": "TypeError: ethers.getSigners is not a function",
+                        "estack": "TypeError: ethers.getSigners is not a function\n    at whitelistFixture (test\\WhitelistFactory.js:14:48)\n    at loadFixture (node_modules\\@nomicfoundation\\hardhat-network-helpers\\dist\\src\\loadFixture.js:63:28)\n    at async Context.<anonymous> (test\\WhitelistFactory.js:38:38)",
+                        "diff": null
+                      },
+                      "uuid": "f7ddabc4-a50c-43fd-8a14-1ffd716797a4",
+                      "parentUUID": "626782d2-f2b8-4f1e-ae5d-e7beab56e1ba",
+                      "isHook": false,
+                      "skipped": false
+                    }
+                  ],
+                  "suites": [],
+                  "passes": [],
+                  "failures": [
+                    "f7ddabc4-a50c-43fd-8a14-1ffd716797a4"
+                  ],
+                  "pending": [],
+                  "skipped": [],
+                  "duration": 0,
+                  "root": false,
+                  "rootEmpty": false,
+                  "_timeout": 2000
+                },
+                {
+                  "uuid": "b7480299-7f40-4c77-bcb4-64a88d509405",
+                  "title": "Whitelist",
+                  "fullFile": "C:\\xampp\\htdocs\\whitelistfactory\\test\\WhitelistFactory.js",
+                  "file": "\\test\\WhitelistFactory.js",
+                  "beforeHooks": [],
+                  "afterHooks": [],
+                  "tests": [
+                    {
+                      "title": "Should fail if the start time is smaller than current block time",
+                      "fullTitle": "WhitelistFactory Deployment Whitelist Should fail if the start time is smaller than current block time",
+                      "timedOut": false,
+                      "duration": 965,
+                      "state": "failed",
+                      "speed": null,
+                      "pass": false,
+                      "fail": true,
+                      "pending": false,
+                      "context": null,
+                      "code": "const startTime = (await time.latest()) - 100\nconst endTime = (await time.latest()) - 101\nconst { whitelistFactory, owner } = await loadFixture(whitelistFixture)\nexpect(whitelistFactory.newWhitelist(startTime, endTime, owner.address)).to.be.revertedWith(\n  'Start time must be greater than current time'\n)",
+                      "err": {
+                        "message": "TypeError: ethers.getSigners is not a function",
+                        "estack": "TypeError: ethers.getSigners is not a function\n    at whitelistFixture (test\\WhitelistFactory.js:14:48)\n    at loadFixture (node_modules\\@nomicfoundation\\hardhat-network-helpers\\dist\\src\\loadFixture.js:63:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async Context.<anonymous> (test\\WhitelistFactory.js:49:45)",
+                        "diff": null
+                      },
+                      "uuid": "5ec9809c-9e83-4297-b430-5ed85490959e",
+                      "parentUUID": "b7480299-7f40-4c77-bcb4-64a88d509405",
+                      "isHook": false,
+                      "skipped": false
+                    },
+                    {
+                      "title": "Should fail if the end time is smaller than start time",
+                      "fullTitle": "WhitelistFactory Deployment Whitelist Should fail if the end time is smaller than start time",
+                      "timedOut": false,
+                      "duration": 2,
+                      "state": "failed",
+                      "speed": null,
+                      "pass": false,
+                      "fail": true,
+                      "pending": false,
+                      "context": null,
+                      "code": "const startTime = (await time.latest()) - 100\nconst endTime = (await time.latest()) - 101\nconst { whitelistFactory, owner } = await loadFixture(whitelistFixture)\nexpect(whitelistFactory.newWhitelist(startTime, endTime, owner.address)).to.be.revertedWith(\n  'Start time must be greater than current time'\n)",
+                      "err": {
+                        "message": "TypeError: ethers.getSigners is not a function",
+                        "estack": "TypeError: ethers.getSigners is not a function\n    at whitelistFixture (test\\WhitelistFactory.js:14:48)\n    at loadFixture (node_modules\\@nomicfoundation\\hardhat-network-helpers\\dist\\src\\loadFixture.js:63:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async Context.<anonymous> (test\\WhitelistFactory.js:58:45)",
+                        "diff": null
+                      },
+                      "uuid": "ee17d921-0dd3-4d17-8ca5-d5cba1125775",
+                      "parentUUID": "b7480299-7f40-4c77-bcb4-64a88d509405",
+                      "isHook": false,
+                      "skipped": false
+                    },
+                    {
+                      "title": "Should emit new whitelist created",
+                      "fullTitle": "WhitelistFactory Deployment Whitelist Should emit new whitelist created",
+                      "timedOut": false,
+                      "duration": 0,
+                      "state": "failed",
+                      "speed": null,
+                      "pass": false,
+                      "fail": true,
+                      "pending": false,
+                      "context": null,
+                      "code": "const metadata = 'bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi'\nconst startTime = (await time.latest()) + 100\nconst endTime = (await time.latest()) + 101\nconst { whitelistFactory, owner } = await loadFixture(whitelistFixture)\nexpect(await whitelistFactory.newWhitelist(metadata, startTime, endTime, owner.address)).to.emit(\n  owner.address,\n  '0x0000000000000000000000000000000000000000000000000000000000000001',\n  metadata,\n  startTime,\n  endTime,\n  owner.address,\n  false\n)",
+                      "err": {
+                        "message": "TypeError: ethers.getSigners is not a function",
+                        "estack": "TypeError: ethers.getSigners is not a function\n    at whitelistFixture (test\\WhitelistFactory.js:14:48)\n    at loadFixture (node_modules\\@nomicfoundation\\hardhat-network-helpers\\dist\\src\\loadFixture.js:63:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async Context.<anonymous> (test\\WhitelistFactory.js:68:45)",
+                        "diff": null
+                      },
+                      "uuid": "b168f5c6-0db8-46f5-b6ba-e51174bb6922",
+                      "parentUUID": "b7480299-7f40-4c77-bcb4-64a88d509405",
+                      "isHook": false,
+                      "skipped": false
+                    }
+                  ],
+                  "suites": [],
+                  "passes": [],
+                  "failures": [
+                    "5ec9809c-9e83-4297-b430-5ed85490959e",
+                    "ee17d921-0dd3-4d17-8ca5-d5cba1125775",
+                    "b168f5c6-0db8-46f5-b6ba-e51174bb6922"
+                  ],
+                  "pending": [],
+                  "skipped": [],
+                  "duration": 967,
+                  "root": false,
+                  "rootEmpty": false,
+                  "_timeout": 2000
+                }
+              ],
+              "passes": [],
+              "failures": [
+                "01ce1893-1b66-4ec2-a4b6-450898047d46",
+                "363e61e1-b08e-4b76-b854-12b82f2d5a44"
+              ],
+              "pending": [],
+              "skipped": [],
+              "duration": 1,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "10.3.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": null,
+      "version": "6.2.0"
+    }
+  }
+}

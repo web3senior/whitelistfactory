@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "whitelist smart contract",
   "main": "",
+  "git": "https://github.com/web3senior/whitelistfactory",
   "scripts": {
-    "hardhat:tasks": "npx hardhat",
+    "tasks": "npx hardhat",
     "compile": "npx hardhat compile",
-    "hardhat:test": "npx hardhat test",
+    "test": "npx hardhat test",
     "deploy": "npx hardhat run scripts/deploy.js --network localhost",
     "node": "npx hardhat node",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "mocha:reporter": "npx mocha test/WhitelistFactory.js --reporter mochawesome"
   },
   "keywords": [
     "whitelist",
@@ -22,8 +23,5 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "hardhat": "^2.20.1"
-  },
-  "dependencies": {
-    "web3": "^4.5.0"
   }
 }

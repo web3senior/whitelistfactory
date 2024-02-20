@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+import "Ownable.sol";
+
 /// @title A whitelist contract for NFT lovers
 /// @author Amir Rahimi
-/// @notice This contrct is deployed
+/// @notice Read the use cases before deploying the contract
 /// @dev Run test before deploying, you can find deployed contract addresses in deployed dir
-contract WhitelistFactory {
-    /// @notice Owner address
-    address public owner;
-
+contract WhitelistFactory is Ownable {
     /// @notice Current count
-    uint256 public count = 0;
+    uint256 private count = 0;
 
     error TooEarly(uint256 time);
+
     error TooLate(uint256 time);
 
     event WhitelistCreated(
@@ -27,7 +27,7 @@ contract WhitelistFactory {
 
     event Log(string func, uint256 gas);
 
-    struct WhitelistStruct {
+    struct whitelistStruct {
         bytes32 id;
         string metadata;
         uint256 startTime;
@@ -36,98 +36,94 @@ contract WhitelistFactory {
         bool pause;
     }
 
-    WhitelistStruct[] public whitelists;
+    whitelistStruct[] public whitelist;
 
-    struct SubscribeStruct {
+    struct UserStruct {
         bytes32 whitelistId;
         address sender;
     }
 
-    SubscribeStruct[] public subscribes;
+    UserStruct[] private user;
 
     constructor() {
-        owner = msg.sender;
-    }
+        /// @dev Assert that count will start from 0
+        assert(count == 0);
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "You aren't the owner");
-        _;
-    }
-
-    function transferOwnership(address newOwner) public onlyOwner {
-        owner = newOwner;
+        /// @dev Assert that owner is equal to msg.sender
+        assert(msg.sender == owner);
     }
 
     // @notice: Create a new whitelist
     // @param _metadata The IPFS CID => bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi
-    // @param startTime Time in timestamp format => 1705534812
+    // @param startTime Time in timestamp format => 1745534812
     // @return Whitelist id
-    function newWhitelist(
+    function addWhitelist(
         string memory _metadata,
         uint256 startTime,
         uint256 endTime,
         address manager
-    ) external returns (bytes32) {
-        /// @notice Increase the current value of count
+    ) public returns (bytes32) {
+        /// @notice Continue if start time is gretter that current time
+        require(startTime > block.timestamp, "Start time must be greater than current time");
+
+        /// @notice Continue if end time is gretter than start time
+        require(endTime > startTime, "End time must be greater than start time");
+
+        /// @notice Increase counter
         ++count;
 
-        require(startTime > block.timestamp && endTime > startTime, 'Start time must be greater than current time');
+        /// @notice Add a new whitelist
+        whitelist.push(whitelistStruct(bytes32(count), _metadata, startTime, endTime, manager, false));
 
-        /// @dev Stores the new whitelist in the whielist array
-        whitelists.push(WhitelistStruct(bytes32(count), _metadata, startTime, endTime, manager, false));
-
-        /// @notice Emit the new whitelist
+        /// @notice Emit new whitelist data
         emit WhitelistCreated(msg.sender, bytes32(count), _metadata, startTime, endTime, manager, false);
 
         return bytes32(count);
     }
 
     // isActivePool
-    function isActiveWhitelist(bytes32 _whitelistId) public view returns (bool) {
-        for (uint256 i = 0; i < whitelists.length; i++) {
-            if (whitelists[i].id == _whitelistId) return !whitelists[0].pause;
+    function getWhitelist(bytes32 _whitelistId) public view returns (whitelistStruct[] memory) {
+        for (uint256 i = 0; i < whitelist.length; i++) {
+            if (whitelist[i].id == _whitelistId) return whitelist;
         }
 
         revert();
     }
 
-    // 1717958989
+    // check if sender is the manager of the whitelist
+    // returns boolean
     function updateWhitelist(bytes32 _whitelistId, string memory _metadata, bool _pause) public returns (bool) {
-        for (uint256 i = 0; i < whitelists.length; i++) {
-            if (whitelists[i].id == _whitelistId && msg.sender == whitelists[i].manager) {
-                whitelists[i].metadata = _metadata;
-                whitelists[i].pause = _pause;
+        for (uint256 i = 0; i < whitelist.length; i++) {
+            if (whitelist[i].id == _whitelistId && msg.sender == whitelist[i].manager) {
+                whitelist[i].metadata = _metadata;
+                whitelist[i].pause = _pause;
                 return true;
             }
         }
         return false;
     }
 
-    function getWhitelistCount() public view returns (uint256) {
-        return whitelists.length;
+    function whitelistCount() public view returns (uint256) {
+        return whitelist.length;
     }
 
-    // function subscribe(bytes32 _whitelistId) public {
-    //     for (uint256 i = 0; i < whitelist.length; i++) {
-    //         if (whitelist[i].id == _whitelistId && msg.sender == whitelist[i].manager) {
-    //             //whitelist[i].metadata = _metadata;
-    //             //whitelist[i].pause = _pause;
-    //            // return true;
-    //         }
-    //     }
+    function addUser(bytes32 _whitelistId) public returns (bool) {
+        for (uint256 i = 0; i < user.length; i++) {
+            if (user[i].sender == msg.sender && user[i].whitelistId == _whitelistId) {
+                revert();
+            }
+        }
+        emit Log("New Address", gasleft());
+        user.push(UserStruct(_whitelistId, msg.sender));
+        return true;
+    }
 
-    //     emit Log('New Subscription', gasleft());
-    //     subscribes.push(SubscribeStruct(_whitelistId, msg.sender));
-    // }
+    // return whitelist ID if a user exists
+    function verifyUser(address _address) public view returns (bytes32) {
+        for (uint256 i = 0; i < user.length; i++) {
+            if (user[i].sender == _address) return user[i].whitelistId;
+        }
 
-    // isInSubscriptionList
-    // function isInSubscriptionList(address _address) public view returns (bytes32) {
-    //     for (uint256 i = 0; i < subscribes.length; i++) {
-    //         if (subscribes[i].sender == _address) return subscribes[i].whitelistId;
-    //     }
-    // }
-
-    function getSubscribeOverall() public view returns (uint256) {
-        return subscribes.length;
+        return bytes32(0);
     }
 }
