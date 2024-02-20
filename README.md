@@ -44,9 +44,9 @@ git clone
 view demo  »
 
 ### Deployed Contract
-Lukso: contract address ``0x000000000000000`` view on explorer ``https://``
+Lukso: contract address ```0x000000000000000``` view on explorer ``https://``
 
-Scroll Sepolia: contract address ``0x000000000000000`` view on explorer ``https://``
+Scroll Sepolia: contract address ```0x000000000000000``` view on explorer ``https://``
 
 
 ### Contributing
