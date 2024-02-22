@@ -74,11 +74,11 @@ npm run test
 
 ➜ ready for deploying💥
 
-### Deployed Contract
+### Deployed Contract (Testnet)
 
-Arbitrum: contract address `0x0` view on explorer `https://`
+Lukso: contract address `0x5c2C28e2b3C74E8bAeF0B7504f1f4CE5cEd14Dd0` [view on explorer](https://explorer.execution.testnet.lukso.network/tx/0x9db9cdf718aafc19df8f55f4a4d6fea513dd1e1ab3139e51e57ca01246846750/)
 
-<!-- Lukso: contract address `0x0` view on explorer `https://` -->
+We will be adding more networks soon.
 
 
 ### Contributing
@@ -93,7 +93,7 @@ Please make sure to update tests as appropriate.
 
 ### Reference
 
-<!-- - [1] [Lukso](https://docs.lukso.tech/learn/concepts/#transaction-relay-service:~:text=On%20LUKSO%2C%20users%20currently%20get%20a%20free%20monthly%20quota%20of%2020.000.000%20GAS%20when%20creating%20a%20Universal%20Profile%20through%20the%20Universal%20Profile%20Browser%20Extension.) -->
+ - [1] [Lukso](https://docs.lukso.tech/learn/concepts/#transaction-relay-service:~:text=On%20LUKSO%2C%20users%20currently%20get%20a%20free%20monthly%20quota%20of%2020.000.000%20GAS%20when%20creating%20a%20Universal%20Profile%20through%20the%20Universal%20Profile%20Browser%20Extension.)
 
 ## License
 
