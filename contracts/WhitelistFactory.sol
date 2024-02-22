@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import "Ownable.sol";
+import "./_ownable.sol";
 
 /// @title A whitelist contract for NFT lovers
 /// @author Amir Rahimi
@@ -53,10 +53,22 @@ contract WhitelistFactory is Ownable {
         assert(msg.sender == owner);
     }
 
-    // @notice: Create a new whitelist
-    // @param _metadata The IPFS CID => bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi
-    // @param startTime Time in timestamp format => 1745534812
-    // @return Whitelist id
+    /// @notice Modifeir to check if the sender is owner of the contract, access modifier
+    modifier onlyManager(bytes32 _whitelistId) {
+        for (uint256 i = 0; i < whitelist.length; i++) {
+            if (whitelist[i].id == _whitelistId) {
+                require(whitelist[i].id == _whitelistId, "not found");
+                require(msg.sender == whitelist[i].manager, "you are not the manager of this....");
+            }
+        }
+        _;
+    }
+
+    /// @notice Create a new whitelist
+    /// @dev If the manager field is left empty, the sender will be recognized as the manager
+    /// @param _metadata The IPFS CID => bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi
+    /// @param startTime Time in timestamp format => 1745534812
+    /// @return Whitelist id
     function addWhitelist(
         string memory _metadata,
         uint256 startTime,
@@ -81,49 +93,117 @@ contract WhitelistFactory is Ownable {
         return bytes32(count);
     }
 
-    // isActivePool
+    //
     function getWhitelist(bytes32 _whitelistId) public view returns (whitelistStruct[] memory) {
         for (uint256 i = 0; i < whitelist.length; i++) {
-            if (whitelist[i].id == _whitelistId) return whitelist;
+            if (whitelist[i].id == _whitelistId) {
+                return whitelist;
+            }
         }
 
-        revert();
+        revert("The whitelist that has been entered has not been declared yet");
     }
 
     // check if sender is the manager of the whitelist
     // returns boolean
-    function updateWhitelist(bytes32 _whitelistId, string memory _metadata, bool _pause) public returns (bool) {
+    function updateWhitelist(
+        bytes32 _whitelistId,
+        string memory _metadata,
+        bool _pause
+    ) public onlyManager(_whitelistId) returns (bool) {
         for (uint256 i = 0; i < whitelist.length; i++) {
-            if (whitelist[i].id == _whitelistId && msg.sender == whitelist[i].manager) {
+            if (whitelist[i].id == _whitelistId) {
                 whitelist[i].metadata = _metadata;
                 whitelist[i].pause = _pause;
+
+                // Emit that the whitelist updated
                 return true;
             }
         }
         return false;
     }
 
-    function whitelistCount() public view returns (uint256) {
+    function getWhitelistCount() public view returns (uint256) {
         return whitelist.length;
     }
 
-    function addUser(bytes32 _whitelistId) public returns (bool) {
-        for (uint256 i = 0; i < user.length; i++) {
-            if (user[i].sender == msg.sender && user[i].whitelistId == _whitelistId) {
-                revert();
+    /// @notice Add user to a whitelist
+    function addUser(bytes32 _whitelistId) public {
+        /// @notice Revert the transaction if the whitelist ID is not valid, not open, or has expired
+        for (uint256 i = 0; i < whitelist.length; i++) {
+            if (whitelist[i].id == _whitelistId) {
+                require(!whitelist[i].pause, "The whitelist ID you entered has been paused");
+                if (whitelist[i].endTime < block.timestamp) revert("The entered whitelist is expired");
+            } else {
+                revert("The ID you entered does not have a whitelist associated with it.");
             }
         }
-        emit Log("New Address", gasleft());
+
+        /// @notice Check the sender is not exist on the whitelist
+        for (uint256 i = 0; i < user.length; i++) {
+            if (user[i].sender == msg.sender && user[i].whitelistId == _whitelistId)
+                revert("The Sender is already on the list");
+        }
+
+        /// @notice Add new user
         user.push(UserStruct(_whitelistId, msg.sender));
-        return true;
+
+        /// @notice Emit new user has been added
+        emit Log("New user", gasleft());
     }
 
-    // return whitelist ID if a user exists
+    /// @notice Get users list of a whitelist
+    function getUserList(bytes32 _whitelistId) external view returns (address[] memory) {
+        address[] memory userList = new address[](user.length);
+        uint256 userCountr = 0;
+
+        for (uint256 i = 0; i < user.length; i++) {
+            if (user[i].whitelistId == _whitelistId) {
+                userList[userCountr] = user[i].sender;
+                userCountr++;
+            }
+        }
+
+        return userList;
+    }
+
+    /// @notice Verify if a user is on a specific whitelist
+    /// @return Whitelist ID
     function verifyUser(address _address) public view returns (bytes32) {
         for (uint256 i = 0; i < user.length; i++) {
             if (user[i].sender == _address) return user[i].whitelistId;
         }
 
         return bytes32(0);
+    }
+
+    /// @notice Add user by the manager of the whitelist
+    function addUserByManager(address _addr, bytes32 _whitelistId) public onlyManager(_whitelistId) {
+        /// @notice Check the sender is not exist on the whitelist
+        for (uint256 i = 0; i < user.length; i++) {
+            if (user[i].sender == _addr && user[i].whitelistId == _whitelistId)
+                revert("The sender is already on the list");
+        }
+        user.push(UserStruct(_whitelistId, _addr));
+
+        /// @notice Emit new user has been added
+        emit Log("New user", gasleft());
+    }
+
+    /// @notice Add user by the manager of the whitelist
+    function removeUserByManager(address _addr, bytes32 _whitelistId) public onlyManager(_whitelistId) returns (bool) {
+        /// @notice Check the sender is not exist on the whitelist
+        for (uint256 i = 0; i < user.length; i++) {
+            if (user[i].sender == _addr && user[i].whitelistId == _whitelistId) {
+                delete user[0];
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function getUserCount() public view returns (uint256) {
+        return user.length;
     }
 }

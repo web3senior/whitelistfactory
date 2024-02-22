@@ -8,9 +8,9 @@
     "tasks": "npx hardhat",
     "compile": "npx hardhat compile",
     "test": "npx hardhat test",
+    "deploy:lukso:up": "npx hardhat run scripts/deployUP.js",
     "deploy": "npx hardhat run scripts/deploy.js --network localhost",
-    "node": "npx hardhat node",
-    "mocha:reporter": "npx mocha test/WhitelistFactory.js --reporter mochawesome"
+    "node": "npx hardhat node"
   },
   "keywords": [
     "whitelist",
@@ -21,7 +21,9 @@
   "author": "Amir Rahimi <atenyun@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "@lukso/lsp-smart-contracts": "^0.14.0",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "dotenv": "^16.4.5",
     "hardhat": "^2.20.1"
   }
 }

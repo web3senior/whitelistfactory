@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.5.0/web3.min.js"
+            integrity="sha512-FhAl50BpK3gf9K//lbAWek9EEQEtGQyyXZNc1fuwcC2tVf2cskiJBcumXY0zJksYtms6S5cqubp1MNfUYTkO2A=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
+        <script>
+            const ABI = [
+                {
+                    inputs: [],
+                    stateMutability: "nonpayable",
+                    type: "constructor",
+                },
+                {
+                    inputs: [
+                        {
+                            internalType: "uint256",
+                            name: "time",
+                            type: "uint256",
+                        },
+                    ],
+                    name: "TooEarly",
+                    type: "error",
+                },
+                {
+                    inputs: [
+                        {
+                            internalType: "uint256",
+                            name: "time",
+                            type: "uint256",
+                        },
+                    ],
+                    name: "TooLate",
+                    type: "error",
+                },
+                {
+                    inputs: [],
+                    name: "Unauthorized",
+                    type: "error",
+                },
+                {
+                    anonymous: false,
+                    inputs: [
+                        {
+                            indexed: false,
+                            internalType: "string",
+                            name: "func",
+                            type: "string",
+                        },
+                        {
+                            indexed: false,
+                            internalType: "uint256",
+                            name: "gas",
+                            type: "uint256",
+                        },
+                    ],
+                    name: "Log",
+                    type: "event",
+                },
+                {
+                    anonymous: false,
+                    inputs: [
+                        {
+                            indexed: true,
+                            internalType: "address",
+                            name: "owner",
+                            type: "address",
+                        },
+                    ],
+                    name: "OwnerSet",
+                    type: "event",
+                },
+                {
+                    anonymous: false,
+                    inputs: [
+                        {
+                            indexed: true,
+                            internalType: "address",
+                            name: "sender",
+                            type: "address",
+                        },
+                        {
+                            indexed: true,
+                            internalType: "bytes32",
+                            name: "id",
+                            type: "bytes32",
+                        },
+                        {
+                            indexed: false,
+                            internalType: "string",
+                            name: "metadata",
+                            type: "string",
+                        },
+                        {
+                            indexed: false,
+                            internalType: "uint256",
+                            name: "startTime",
+                            type: "uint256",
+                        },
+                        {
+                            indexed: false,
+                            internalType: "uint256",
+                            name: "endTime",
+                            type: "uint256",
+                        },
+                        {
+                            indexed: true,
+                            internalType: "address",
+                            name: "manager",
+                            type: "address",
+                        },
+                        {
+                            indexed: false,
+                            internalType: "bool",
+                            name: "pause",
+                            type: "bool",
+                        },
+                    ],
+                    name: "WhitelistCreated",
+                    type: "event",
+                },
+                {
+                    inputs: [
+                        {
+                            internalType: "bytes32",
+                            name: "_whitelistId",
+                            type: "bytes32",
+                        },
+                    ],
+                    name: "addUser",
+                    outputs: [],
+                    stateMutability: "nonpayable",
+                    type: "function",
+                },
+                {
+                    inputs: [
+                        {
+                            internalType: "address",
+                            name: "_addr",
+                            type: "address",
+                        },
+                        {
+                            internalType: "bytes32",
+                            name: "_whitelistId",
+                            type: "bytes32",
+                        },
+                    ],
+                    name: "addUserByManager",
+                    outputs: [],
+                    stateMutability: "nonpayable",
+                    type: "function",
+                },
+                {
+                    inputs: [
+                        {
+                            internalType: "string",
+                            name: "_metadata",
+                            type: "string",
+                        },
+                        {
+                            internalType: "uint256",
+                            name: "startTime",
+                            type: "uint256",
+                        },
+                        {
+                            internalType: "uint256",
+                            name: "endTime",
+                            type: "uint256",
+                        },
+                        {
+                            internalType: "address",
+                            name: "manager",
+                            type: "address",
+                        },
+                    ],
+                    name: "addWhitelist",
+                    outputs: [
+                        {
+                            internalType: "bytes32",
+                            name: "",
+                            type: "bytes32",
+                        },
+                    ],
+                    stateMutability: "nonpayable",
+                    type: "function",
+                },
+                {
+                    inputs: [],
+                    name: "getOwner",
+                    outputs: [
+                        {
+                            internalType: "address",
+                            name: "",
+                            type: "address",
+                        },
+                    ],
+                    stateMutability: "view",
+                    type: "function",
+                },
+                {
+                    inputs: [],
+                    name: "getUserCount",
+                    outputs: [
+                        {
+                            internalType: "uint256",
+                            name: "",
+                            type: "uint256",
+                        },
+                    ],
+                    stateMutability: "view",
+                    type: "function",
+                },
+                {
+                    inputs: [
+                        {
+                            internalType: "bytes32",
+                            name: "_whitelistId",
+                            type: "bytes32",
+                        },
+                    ],
+                    name: "getUserList",
+                    outputs: [
+                        {
+                            internalType: "address[]",
+                            name: "",
+                            type: "address[]",
+                        },
+                    ],
+                    stateMutability: "view",
+                    type: "function",
+                },
+                {
+                    inputs: [
+                        {
+                            internalType: "bytes32",
+                            name: "_whitelistId",
+                            type: "bytes32",
+                        },
+                    ],
+                    name: "getWhitelist",
+                    outputs: [
+                        {
+                            components: [
+                                {
+                                    internalType: "bytes32",
+                                    name: "id",
+                                    type: "bytes32",
+                                },
+                                {
+                                    internalType: "string",
+                                    name: "metadata",
+                                    type: "string",
+                                },
+                                {
+                                    internalType: "uint256",
+                                    name: "startTime",
+                                    type: "uint256",
+                                },
+                                {
+                                    internalType: "uint256",
+                                    name: "endTime",
+                                    type: "uint256",
+                                },
+                                {
+                                    internalType: "address",
+                                    name: "manager",
+                                    type: "address",
+                                },
+                                {
+                                    internalType: "bool",
+                                    name: "pause",
+                                    type: "bool",
+                                },
+                            ],
+                            internalType:
+                                "struct WhitelistFactory.whitelistStruct[]",
+                            name: "",
+                            type: "tuple[]",
+                        },
+                    ],
+                    stateMutability: "view",
+                    type: "function",
+                },
+                {
+                    inputs: [],
+                    name: "getWhitelistCount",
+                    outputs: [
+                        {
+                            internalType: "uint256",
+                            name: "",
+                            type: "uint256",
+                        },
+                    ],
+                    stateMutability: "view",
+                    type: "function",
+                },
+                {
+                    inputs: [
+                        {
+                            internalType: "address",
+                            name: "_addr",
+                            type: "address",
+                        },
+                        {
+                            internalType: "bytes32",
+                            name: "_whitelistId",
+                            type: "bytes32",
+                        },
+                    ],
+                    name: "removeUserByManager",
+                    outputs: [
+                        {
+                            internalType: "bool",
+                            name: "",
+                            type: "bool",
+                        },
+                    ],
+                    stateMutability: "nonpayable",
+                    type: "function",
+                },
+                {
+                    inputs: [
+                        {
+                            internalType: "address",
+                            name: "newOwner",
+                            type: "address",
+                        },
+                    ],
+                    name: "transferOwnership",
+                    outputs: [],
+                    stateMutability: "nonpayable",
+                    type: "function",
+                },
+                {
+                    inputs: [
+                        {
+                            internalType: "bytes32",
+                            name: "_whitelistId",
+                            type: "bytes32",
+                        },
+                        {
+                            internalType: "string",
+                            name: "_metadata",
+                            type: "string",
+                        },
+                        {
+                            internalType: "bool",
+                            name: "_pause",
+                            type: "bool",
+                        },
+                    ],
+                    name: "updateWhitelist",
+                    outputs: [
+                        {
+                            internalType: "bool",
+                            name: "",
+                            type: "bool",
+                        },
+                    ],
+                    stateMutability: "nonpayable",
+                    type: "function",
+                },
+                {
+                    inputs: [
+                        {
+                            internalType: "address",
+                            name: "_address",
+                            type: "address",
+                        },
+                    ],
+                    name: "verifyUser",
+                    outputs: [
+                        {
+                            internalType: "bytes32",
+                            name: "",
+                            type: "bytes32",
+                        },
+                    ],
+                    stateMutability: "view",
+                    type: "function",
+                },
+                {
+                    inputs: [
+                        {
+                            internalType: "uint256",
+                            name: "",
+                            type: "uint256",
+                        },
+                    ],
+                    name: "whitelist",
+                    outputs: [
+                        {
+                            internalType: "bytes32",
+                            name: "id",
+                            type: "bytes32",
+                        },
+                        {
+                            internalType: "string",
+                            name: "metadata",
+                            type: "string",
+                        },
+                        {
+                            internalType: "uint256",
+                            name: "startTime",
+                            type: "uint256",
+                        },
+                        {
+                            internalType: "uint256",
+                            name: "endTime",
+                            type: "uint256",
+                        },
+                        {
+                            internalType: "address",
+                            name: "manager",
+                            type: "address",
+                        },
+                        {
+                            internalType: "bool",
+                            name: "pause",
+                            type: "bool",
+                        },
+                    ],
+                    stateMutability: "view",
+                    type: "function",
+                },
+            ]
+            const compile = {
+                bytecode: `0x608060405234801561000f575f80fd5b50335f806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505f8054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f50146d0e3c60aa1d17a70635b05494f864e86144a2201275021014fbf08bafe260405160405180910390a2610329806100be5f395ff3fe608060405234801561000f575f80fd5b5060043610610034575f3560e01c8063893d20e814610038578063f2fde38b14610056575b5f80fd5b610040610072565b60405161004d9190610209565b60405180910390f35b610070600480360381019061006b9190610250565b610099565b005b5f805f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b5f8054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614610126576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161011d906102d5565b60405180910390fd5b805f806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505f8054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f50146d0e3c60aa1d17a70635b05494f864e86144a2201275021014fbf08bafe260405160405180910390a250565b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f6101f3826101ca565b9050919050565b610203816101e9565b82525050565b5f60208201905061021c5f8301846101fa565b92915050565b5f80fd5b61022f816101e9565b8114610239575f80fd5b50565b5f8135905061024a81610226565b92915050565b5f6020828403121561026557610264610222565b5b5f6102728482850161023c565b91505092915050565b5f82825260208201905092915050565b7f53656e646572206e6f7420617574686f72697a6564206173206f776e657200005f82015250565b5f6102bf601e8361027b565b91506102ca8261028b565b602082019050919050565b5f6020820190508181035f8301526102ec816102b3565b905091905056fea26469706673582212207a76be47f1cbbe4a8700dec93ef674fac210d5d1513bc1009eb73fa872764d9664736f6c63430008180033`,
+            }
+
+            window.addEventListener("load", async () => {
+                const web3 = new Web3(window.lukso)
+
+                async function connectWallet() {
+                    try {
+                        let accounts = await web3.eth.getAccounts()
+                        if (accounts.length === 0)
+                            await web3.eth.requestAccounts()
+                        accounts = await web3.eth.getAccounts()
+                        console.log(`UP successfuly connected`)
+                        return accounts[0]
+                    } catch (error) {
+                        toast.error(error.message)
+                        toast.dismiss(loadingToast)
+                    }
+                }
+
+                document
+                    .querySelector("button")
+                    .addEventListener("click", async () => {
+                        connectWallet().then(async (address) => {
+                            web3.eth
+                                .sendTransaction(
+                                    {
+                                        from: address,
+                                        data: compile.bytecode, // deploying a contracrt
+                                    },
+                                    function (error, hash) {
+                                        console.log(error, hash)
+                                    }
+                                )
+                                .once("transactionHash", (txhash) => {
+                                    console.log(
+                                        `Mining deployment transaction ... ${txhash}`
+                                    )
+                         
+                                })
+                        })
+                    })
+            })
+        </script>
+    </head>
+    <body>
+        <button>Deploy with UP</button>
+    </body>
+</html>
