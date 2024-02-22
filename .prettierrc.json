@@ -22,6 +22,12 @@
       "options": {
         "tabWidth": 4
       }
+    },
+    {
+      "files": ["test/*.js"],
+      "options": {
+        "printWidth": 200
+      }
     }
   ]
 }

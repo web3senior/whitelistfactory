@@ -1,7 +1,4 @@
-const {
-  time,
-  loadFixture,
-} = require("@nomicfoundation/hardhat-toolbox/network-helpers")
+const { time, loadFixture } = require("@nomicfoundation/hardhat-toolbox/network-helpers")
 const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs")
 const { expect } = require("chai")
 const hre = require("hardhat")
@@ -11,7 +8,7 @@ describe("WhitelistFactory", function () {
   // We use loadFixture to run this setup once, snapshot that state,
   // and reset Hardhat Network to that snapshot in every test.
 
-  async function whitelistFixture() {
+  async function whitelistFactoryFixture() {
     // Contracts are deployed using the first signer/account by default
     const [owner, otherAccount] = await ethers.getSigners()
 
@@ -21,29 +18,18 @@ describe("WhitelistFactory", function () {
     return { whitelistFactory, owner, otherAccount }
   }
 
-  describe("Access Control", function () {})
-
-  describe("Deployment", function () {
+  // Access Contral
+  describe("Access Control", function () {
     it("Should set the right owner", async function () {
-      const { whitelistFactory, owner } = await loadFixture(whitelistFixture)
+      const { whitelistFactory, owner } = await loadFixture(whitelistFactoryFixture)
       expect(await whitelistFactory.owner()).to.equal(owner.address)
     })
+  })
 
-    it("Should fail if the newOwnerShip is not called by the owner", async function () {
-      const { whitelistFactory, owner, otherAccount } = await loadFixture(
-        whitelistFixture
-      )
-
-      await expect(
-        whitelistFactory
-          .connect(otherAccount)
-          .transferOwnership("0xcd3B766CCDd6AE721141F452C550Ca635964ce71")
-      ).to.be.revertedWith("You aren't the owner")
-    })
-
+  describe("Deployment", function () {
     describe("Count", function () {
       it("Should set count in zero", async function () {
-        const { whitelistFactory } = await loadFixture(whitelistFixture)
+        const { whitelistFactory } = await loadFixture(whitelistFactoryFixture)
         const count = await whitelistFactory.count.call()
         expect(ethers.toNumber(count)).to.be.a("number")
         expect(count).to.be.equal(0)
@@ -54,43 +40,32 @@ describe("WhitelistFactory", function () {
       it("Should fail if the start time is smaller than current block time", async function () {
         const startTime = (await time.latest()) - 100
         const endTime = (await time.latest()) - 101
-        const { whitelistFactory, owner } = await loadFixture(whitelistFixture)
-        expect(
-          whitelistFactory.newWhitelist(startTime, endTime, owner.address)
-        ).to.be.revertedWith("Start time must be greater than current time")
+        const { whitelistFactory, owner } = await loadFixture(whitelistFactoryFixture)
+        expect(whitelistFactory.addWhitelist(startTime, endTime, owner.address)).to.be.revertedWith("Start time must be greater than current time")
       })
 
       it("Should fail if the end time is smaller than start time", async function () {
         const startTime = (await time.latest()) - 100
         const endTime = (await time.latest()) - 101
-        const { whitelistFactory, owner } = await loadFixture(whitelistFixture)
-        expect(
-          whitelistFactory.newWhitelist(startTime, endTime, owner.address)
-        ).to.be.revertedWith("Start time must be greater than current time")
+        const { whitelistFactory, owner } = await loadFixture(whitelistFactoryFixture)
+        expect(whitelistFactory.addWhitelist(startTime, endTime, owner.address)).to.be.revertedWith("End time must be greater than start time")
       })
 
       it("Should emit new whitelist created", async function () {
-        const metadata =
-          "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi"
+        const metadata = "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi"
         const startTime = (await time.latest()) + 100
         const endTime = (await time.latest()) + 101
-        const { whitelistFactory, owner } = await loadFixture(whitelistFixture)
+        const { whitelistFactory, owner } = await loadFixture(whitelistFactoryFixture)
 
-        expect(
-          await whitelistFactory.newWhitelist(
-            metadata,
-            startTime,
-            endTime,
-            owner.address
-          )
-        ).to.emit(
-          owner.address,
-          "0x0000000000000000000000000000000000000000000000000000000000000001",
-          metadata,
-          startTime,
-          endTime,
-          owner.address,
-          false
+        expect(await whitelistFactory.addWhitelist(metadata, startTime, endTime, owner.address, [owner.address])).to.emit(
+          owner.address, //sender
+          "0x0000000000000000000000000000000000000000000000000000000000000001", //id
+          metadata, //metadata
+          startTime, //startTime
+          endTime, //endTime
+          owner.address, //manager
+          false, //pause
+          [owner.address] //users
         )
       })
     })

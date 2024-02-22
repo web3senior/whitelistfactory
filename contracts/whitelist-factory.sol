@@ -9,7 +9,7 @@ import "./_ownable.sol";
 /// @dev Run test before deploying, you can find deployed contract addresses in deployed dir
 contract WhitelistFactory is Ownable(msg.sender) {
     /// @notice Current count
-    uint256 private count = 0;
+    uint256 public count = 0;
 
     error TooEarly(uint256 time);
 
@@ -25,7 +25,8 @@ contract WhitelistFactory is Ownable(msg.sender) {
         uint256 startTime,
         uint256 endTime,
         address indexed manager,
-        bool pause
+        bool pause,
+        address[] users
     );
 
     event Log(string func, uint256 gas);
@@ -84,7 +85,7 @@ contract WhitelistFactory is Ownable(msg.sender) {
         whitelist.push(whitelistStruct(bytes32(count), _metadata, startTime, endTime, manager, false, users));
 
         /// @notice Emit new whitelist data
-        emit WhitelistCreated(msg.sender, bytes32(count), _metadata, startTime, endTime, manager, false);
+        emit WhitelistCreated(msg.sender, bytes32(count), _metadata, startTime, endTime, manager, false, users);
 
         return bytes32(count);
     }
