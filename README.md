@@ -3,6 +3,7 @@
 ---
 
 ![Author Badge](assets/badge-author.svg "Aratta")
+<a href="//arbitrum.io">![Arbitrum Badge](assets/badge-arb.svg "Arbitrum")</a>
 <a href="//lukso.network">![Lukso Badge](assets/badge-lukso.svg "Lukso")</a>
 ![Solidity Badge](assets/badge-solidity.svg "Solidity")
 <a href="/test">![Test Badge](assets/badge-test.svg "Test")</a>
