@@ -77,7 +77,7 @@ npm run test
 
 ### Deployed Contract (Testnet)
 
-Lukso: contract address `0x5c2C28e2b3C74E8bAeF0B7504f1f4CE5cEd14Dd0` [view on explorer](https://explorer.execution.testnet.lukso.network/tx/0x9db9cdf718aafc19df8f55f4a4d6fea513dd1e1ab3139e51e57ca01246846750/)
+Lukso: contract address `0x5c2C28e2b3C74E8bAeF0B7504f1f4CE5cEd14Dd0` [view on explorer](https://explorer.execution.testnet.lukso.network/address/0x5c2C28e2b3C74E8bAeF0B7504f1f4CE5cEd14Dd0?tab=read_contract)
 
 We will be adding more networks soon.
 
