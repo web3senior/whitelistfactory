@@ -10,8 +10,6 @@
 ![Prettier Badge](assets/badge-prettier.svg "HardHat")
 <a href="//twitter.com/atenyun">![X Badge](assets/badge-x.svg "HardHat")</a>
 
-![Cover](assets/cover.png "Cover")
-
 ### Workflow
 
 ```
