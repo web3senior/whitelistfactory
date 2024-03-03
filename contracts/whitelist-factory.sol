@@ -129,7 +129,7 @@ contract WhitelistFactory is Ownable(msg.sender) {
         /// @notice Revert the transaction if the whitelist ID is not valid, not open, or has expired
         for (uint256 i = 0; i < whitelist.length; i++) {
             if (whitelist[i].id == _whitelistId) {
-                if (whitelist[i].startTime > block.timestamp) revert TooEarly(block.timestamp);
+                if (whitelist[i].startTime < block.timestamp) revert TooEarly(block.timestamp);
                 if (whitelist[i].endTime < block.timestamp) revert TooLate(block.timestamp);
                 if (whitelist[i].pause) revert("This whitelist has been paused");
 
